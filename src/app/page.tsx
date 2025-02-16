@@ -1,21 +1,21 @@
 'use client';
 
 import { useState } from 'react';
-import { Button, Container, Notification, TextInput, Title } from '@mantine/core';
+import { Button, Container, List, Notification, TextInput, Title } from '@mantine/core';
 
 export default function HomePage() {
   const [url, setUrl] = useState('');
-  const [tutorial, setTutorial] = useState('');
+  const [subdirectories, setSubdirectories] = useState<string[]>([]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    setTutorial('');
+    setSubdirectories([]);
     setLoading(true);
     try {
-      const res = await fetch('/api/generate', {
+      const res = await fetch('/api/sitemap', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ url }),
@@ -25,7 +25,7 @@ export default function HomePage() {
         throw new Error(errorData.message || '生成エラー');
       }
       const data = await res.json();
-      setTutorial(data.tutorial);
+      setSubdirectories(data.subdirectories);
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -52,10 +52,14 @@ export default function HomePage() {
           {error}
         </Notification>
       )}
-      {tutorial && (
+      {subdirectories.length > 0 && (
         <Container mt="xl">
-          <Title order={3}>生成された教材</Title>
-          <div>{tutorial}</div>
+          <Title order={3}>生成されたサブディレクトリ</Title>
+          <List>
+            {subdirectories.map((subdirectory, index) => (
+              <List.Item key={index}>{subdirectory}</List.Item>
+            ))}
+          </List>
         </Container>
       )}
     </Container>
