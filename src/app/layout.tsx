@@ -2,8 +2,8 @@ import '@mantine/core/styles.css';
 
 import React from 'react';
 import { ColorSchemeScript, mantineHtmlProps, MantineProvider } from '@mantine/core';
-import { theme } from '../../theme';
 import { AppMenu } from '../components/common/AppMenu';
+import { theme } from '../theme';
 
 export const metadata = {
   title: 'AIハンズオン',
