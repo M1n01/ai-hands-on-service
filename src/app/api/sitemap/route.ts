@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { getSubdirectories, isAllowedHost, isValidUrl } from '@/lib/sitemapParser';
 
+export const runtime = 'edge';
+
 /**
  * Handles POST requests to process a URL and return its subdirectories.
  * @param {Request} request - The incoming request object.
