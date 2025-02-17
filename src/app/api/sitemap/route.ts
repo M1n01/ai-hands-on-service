@@ -1,6 +1,11 @@
 import { NextResponse } from 'next/server';
-import { getSubdirectoriesFromSitemap, isAllowedHost, isValidUrl } from '@/lib/sitemapParser';
+import { getSubdirectories, isAllowedHost, isValidUrl } from '@/lib/sitemapParser';
 
+/**
+ * Handles POST requests to process a URL and return its subdirectories.
+ * @param {Request} request - The incoming request object.
+ * @returns {Promise<NextResponse>} - The response containing subdirectories or an error message.
+ */
 export async function POST(request: Request) {
   try {
     const { url } = await request.json();
@@ -12,7 +17,7 @@ export async function POST(request: Request) {
       throw new Error('アクセス禁止のホストです');
     }
 
-    const subdirectories = await getSubdirectoriesFromSitemap(urlObj);
+    const subdirectories = await getSubdirectories(urlObj);
     return NextResponse.json({ subdirectories });
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : '不明なエラーが発生しました';

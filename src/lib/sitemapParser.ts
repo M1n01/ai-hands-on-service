@@ -24,7 +24,7 @@ export function isAllowedHost(hostname: string): boolean {
  * 指定された入力URLのドメインから sitemap.xml を取得し、
  * サブディレクトリ一覧（第一階層のみ）を抽出する
  */
-export async function getSubdirectoriesFromSitemap(urlObj: URL): Promise<string[]> {
+export async function getSubdirectories(urlObj: URL): Promise<string[]> {
   // sitemap.xml の URL を構築
   const sitemapUrl = `${urlObj.protocol}//${urlObj.hostname}/sitemap.xml`;
 
@@ -77,7 +77,6 @@ export async function getSubdirectoriesFromSitemap(urlObj: URL): Promise<string[
         const loc = urlEntry.loc;
         if (typeof loc === 'string') {
           const locUrl = new URL(loc);
-          console.log(locUrl);
           if (locUrl.pathname.startsWith(urlObj.pathname) && locUrl.pathname !== urlObj.pathname) {
             subdirectories.add(locUrl.pathname);
           }
