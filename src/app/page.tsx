@@ -15,7 +15,7 @@ export default function HomePage() {
     setSubdirectories([]);
     setLoading(true);
     try {
-      const res = await fetch('/api/sitemap', {
+      const res = await fetch('/api/validate-url', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ url }),
@@ -26,8 +26,12 @@ export default function HomePage() {
       }
       const data = await res.json();
       setSubdirectories(data.subdirectories);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError('An unexpected error occurred.');
+      }
     } finally {
       setLoading(false);
     }
