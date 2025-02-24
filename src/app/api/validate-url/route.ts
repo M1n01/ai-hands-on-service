@@ -17,7 +17,7 @@ export async function POST(request: Request) {
     if (!apiKey) {
       return NextResponse.json({ error: 'APIキーが設定されていません' }, { status: 500 });
     }
-    const safeBrowsingUrl = `https://safebrowsing.googleapis.com/v5/threatMatches:find?key=${apiKey}`;
+    const safeBrowsingUrl = `https://safebrowsing.googleapis.com/v4/threatMatches:find?key=${apiKey}`;
 
     // API リクエスト用のリクエストボディ
     const requestBody = {
@@ -30,9 +30,10 @@ export async function POST(request: Request) {
           'MALWARE',
           'SOCIAL_ENGINEERING',
           'UNWANTED_SOFTWARE',
+          'THREAT_TYPE_UNSPECIFIED',
           'POTENTIALLY_HARMFUL_APPLICATION',
         ],
-        platformTypes: ['ANY_PLATFORM'],
+        platformTypes: ['PLATFORM_TYPE_UNSPECIFIED', 'ANY_PLATFORM'],
         threatEntryTypes: ['URL'],
         threatEntries: [{ url }],
       },

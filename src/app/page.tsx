@@ -20,17 +20,16 @@ export default function HomePage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ url }),
       });
-      if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.message || '生成エラー');
-      }
       const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || '生成エラー');
+      }
       setSubdirectories(data.subdirectories);
     } catch (error: unknown) {
       if (error instanceof Error) {
         setError(error.message);
       } else {
-        setError('An unexpected error occurred.');
+        setError('予期せぬエラーが発生しました');
       }
     } finally {
       setLoading(false);
