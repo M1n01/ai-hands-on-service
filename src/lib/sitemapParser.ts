@@ -1,4 +1,4 @@
-import { parseStringPromise } from 'xml2js';
+import { XMLParser } from 'fast-xml-parser';
 
 /**
  * 入力された文字列が有効なURLかどうかを検証する
@@ -54,13 +54,16 @@ export async function getSubdirectories(urlObj: URL): Promise<string[]> {
 
   const xmlData = await response.text();
 
-  // 安全な XML パース（xml2js を使用）
+  // XMLパースの設定
+  const parser = new XMLParser({
+    ignoreAttributes: true,
+    isArray: (tagName) => tagName === 'url' || tagName === 'loc',
+  });
+
+  // 安全な XML パース
   let parsed;
   try {
-    parsed = await parseStringPromise(xmlData, {
-      explicitArray: false, // 配列化せずシンプルなオブジェクトとして取得
-      // xml2js はデフォルトで外部エンティティを展開しない設定になっています
-    });
+    parsed = parser.parse(xmlData);
   } catch (err) {
     throw new Error('sitemap XML のパースに失敗しました');
   }
@@ -68,13 +71,10 @@ export async function getSubdirectories(urlObj: URL): Promise<string[]> {
   // サブディレクトリ抽出：<urlset><url><loc>...</loc></url></urlset> を前提とする
   const subdirectories = new Set<string>();
   if (parsed.urlset && parsed.urlset.url) {
-    let urls = parsed.urlset.url;
-    if (!Array.isArray(urls)) {
-      urls = [urls];
-    }
+    const urls = parsed.urlset.url;
     urls.forEach((urlEntry: any) => {
       try {
-        const loc = urlEntry.loc;
+        const loc = urlEntry.loc[0]; // fast-xml-parserではarrayModeを使用するため配列となる
         if (typeof loc === 'string') {
           const locUrl = new URL(loc);
           if (locUrl.pathname.startsWith(urlObj.pathname) && locUrl.pathname !== urlObj.pathname) {
