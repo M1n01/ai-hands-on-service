@@ -56,7 +56,7 @@
 Node.js環境におけるTDDの詳細な実践方法、例、各種ツールの活用方法については、以下のファイルを参照してください：
 
 ```
-.github/prompts/camodes/nodejs-tdd.md
+.github/prompts/ca-modes/nodejs-tdd.md
 ```
 
 このファイルにはテストファーストモードの詳細な手順、テストの命名規約、リファクタリングのベストプラクティスなどが含まれています。
